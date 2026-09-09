@@ -33,6 +33,10 @@ class TextLocalizationTests(unittest.TestCase):
     def to_pixels(self, box):
         return [box[0] * 0.63, box[1] * 0.214, box[2] * 0.63, box[3] * 0.214]
 
+    def test_verified_demo_asset_is_packaged(self):
+        demo = Path(__file__).resolve().parents[1] / "src" / "AI素材案例" / "shop_local_253.jpg"
+        self.assertTrue(demo.exists())
+
     def test_target_inside_a_long_ocr_word_keeps_full_glyph_height(self):
         raw = ocr_raw([
             {"WordText": "领7天出行守护", "Left": 20, "Top": 40, "Width": 196, "Height": 28}
