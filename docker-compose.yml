@@ -1,0 +1,10 @@
+services:
+  app:
+    build: .
+    container_name: ai_material_library
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+    restart: unless-stopped

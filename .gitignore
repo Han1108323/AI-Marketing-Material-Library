@@ -1,0 +1,89 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Environment Variables (Security)
+.env
+.env.local
+
+# Local Data
+assets/
+data/
+*.sqlite
+*.db
+local_qdrant_db/
+pending_ingest/
+known_ids.json
+users.json
+user_feedback.csv
+simulation_results.csv
+import.log
+
+# Generated and downloaded artifacts
+rag_bg_*.png
+rag_gen_*.png
+smart_design_*.png
+temp_vision_*.png
+mask_*.png
+debug_*.html
+首页-华东体验店-淘宝网.htm
+首页-华东体验店-淘宝网_files/
+
+# Keep only the curated, reviewable public sample set.
+AI素材案例/
+!src/AI素材案例/
+!src/AI素材案例/*
+
+# Local Streamlit identity and development-only scripts/docs
+.streamlit/credentials.toml
+/debug_*.py
+/diagnose_qdrant.py
+/verify_url.py
+/download_*.py
+/test_*.py
+/temp_prd.txt
+/素材库PRD.docx
+/AI_PM_Interview_Guide.md
+/Project_Archive.md
+src/test_*.py
+/src/backfill_ctr.py
+/src/batch_ingest.py
+/src/crawl_shop.py
+/src/debug_db.py
+/src/direct_batch_ingest.py
+/src/inject_dummy.py
+/src/reindex_script.py
+/src/run_ingestion.py
+/src/scripts/
+/素材库PRD_v2_Agent.md
+
+# Temp verification directories & sensitive files (NEVER PUSH!)
+_面试官*/
+*面试*/
+*Interview*/
+_ZIP验证*/
+_验证临时目录*/
+*.zip
+*.rar
+*.7z
+*.pdf
+!requirements*.txt
+# Private local-only archive / personal docx
+*.docx
+*.doc
+*.xlsx
+*.xls
+*.pptx
+*.ppt
+*.dmg
+*.app
+# Python Cache
+__pycache__/
+*.pyc
+
+# IDE Settings
+.idea/
+.vscode/
+.DS_Store
+.pytest_cache/
