@@ -1197,7 +1197,7 @@ with tab_fission:
                     if st.button("🪥 一键载入高质量文字微调案例", use_container_width=True, key="fis_quality_demo_load"):
                         st.session_state["fission_demo_enabled"] = True
                         st.session_state["fission_demo_path"] = os.path.join(
-                            "AI素材案例", "shop_local_253.jpg"
+                            os.path.dirname(__file__), "AI素材案例", "shop_local_253.jpg"
                         )
                         st.session_state["fission_demo_caption"] = "历史目标案例：将“现货速发”改为“当日发货”"
                         st.session_state["fis_ins"] = "把“现货速发”改为“当日发货”"
@@ -1232,7 +1232,7 @@ with tab_fission:
                 elif st.session_state.get("fission_demo_enabled"):
                     demo_path = st.session_state.get(
                         "fission_demo_path",
-                        os.path.join("AI素材案例", "shop_local_253.jpg"),
+                        os.path.join(os.path.dirname(__file__), "AI素材案例", "shop_local_253.jpg"),
                     )
                     if os.path.exists(demo_path):
                         save_path = demo_path
