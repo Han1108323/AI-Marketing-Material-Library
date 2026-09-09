@@ -148,7 +148,7 @@ TrendCrafter 改变了素材管理与生产模式，首创基于 CTR 预测的 *
 |------|------|
 | L5 反馈闭环 | `user_feedback.csv` + `FeedbackSystem`（Spearman / MAE 回归） + 报表导入预留接口 |
 | L4 执行生产 | **FISSION 定位与编辑 Agent**（OCR/Qwen-VL + Qwen-Image-Edit-Max）+ **多图 RAG 后处理** |
-| L3 供给决策 | `MaterialAgent` + 状态机 + 3R 决策矩阵（相关度 × 预测 CTR 阈值） |
+| L3 供给决策 |`MaterialAgent` + 状态机 + 3R 决策矩阵（相关度 × 预测 CTR 阈值） |
 | L2 检索召回 | **Qdrant**（云服务 + 本地静态降级双模式）+ 关键词检索 + 语义推理检索融合排序 |
 | L1 感知认知 | **Qwen-VL-Plus** 多模态视觉理解 + DashScope Embedding v3 + **OCR.space**（中文高识别率）|
 | 用户与权限 | users.json（SHA-256 加盐哈希）+ 白名单准入 + 3 角色 RBAC（运营/设计/管理员） |
