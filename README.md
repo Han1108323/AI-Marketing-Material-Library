@@ -1,5 +1,7 @@
 # TrendCrafter AI 素材库 · 基于历史素材数据资产的 AI 供给决策系统
 
+[![test](https://github.com/Han1108323/AI-Marketing-Material-Library/actions/workflows/ci.yml/badge.svg)](https://github.com/Han1108323/AI-Marketing-Material-Library/actions/workflows/ci.yml)
+
 > 让营销素材生产从"拍脑袋做图"走向**数据驱动供给**。
 > 核心逻辑不是"能不能生成一张图"，而是"**该不该做 + 怎么做最优**"：先判断素材库里有没有值得复用的高转化资产，再决定复用 / 微调 / 生成。
 >
@@ -106,7 +108,7 @@ TrendCrafter 改变了素材管理与生产模式，首创基于 CTR 预测的 *
 |-----|------|------|---------|--------|
 | F01 | 智能检索与供给决策（PROCESS 02）| 关键词 + 语义 + CTR 预测三重检索，按综合得分排序，返回 Agent 决策建议 | `search_materials()` in `catalog.py`, UI Tab「智能检索与供给决策」| 🟢 内置行业样本数据集，零配置即可本地验证 |
 | F02 | 素材批量入库与自动打标（PROCESS 01）| 文件夹 / 压缩包 / 淘宝链接 → OCR → 多模态打标 → 标签置信度 → 向量入库 | `MaterialPipeline` in `pipeline.py` + `src/app.py` Tab「批量入库」| 🟢 UI 完整；云端管线需配置 DashScope + OCR + Qdrant API（未配置时走本地静态样本管线，接口层逻辑完整）|
-| F03 | 智能微调 FISSION（PROCESS 03，核心能力）| 单图上传或从素材库选中 → 参数化裂变 / 风格迁移 / 排版重绘 → 批量变体 | `FissionEngine` in `fission.py` + `src/fission.py` 专用 UI（含 portfolio_app 内置）| 🟢 零配置立即可用（静态参数化裂变）；🟡 接入通义万相后启用视觉风格迁移管线 |
+| F03 | 智能微调 FISSION（PROCESS 03，核心能力）| 单图上传 → OCR/Qwen-VL 定位目标文字 → 人工确认区域 → 保留原设计完成文字替换 | `FissionAgent` in `src/fission.py` + `src/app.py`「智能微调」Tab | 🟢 已接通 Qwen-Image-Edit-Max；需要 DashScope Key 执行真实云端编辑 |
 | F04 | RAG 智能生图（PROCESS 04）| 3 张高 CTR 图作参考 → 多图风格一致性 Loss → 文案重排 → 新素材生成 | `RAGGenerator` in `rag_generator.py` + Tab「RAG智能生图」| 🟡 云端生成需 DashScope + Wanx API Key；未配置时界面与调用逻辑本地可见 |
 | F05 | 标签数据管理 | 人工修正自动打标结果 → 主动学习 → 标签置信度权重回写 → 下一次打标更准 | `dictionaries.py` + Tab「标签管理」| 🟢 行业样本标签集可查看与编辑 |
 | F06 | CTR 决策看板与闭环反馈 | 预测分 vs 真实投放 CTR（直通车/引力魔方报表导入）→ Spearman / MAE → 识别评分与业务偏差 → L3 决策模型重训 | `FeedbackSystem` in `feedback.py` + `analytics.py` + Tab「CTR决策看板」| 🟢 内置行业样本 CTR 数据看板可交互；🟡 接入真实投放 API 后启用自动化报表回流 |
@@ -145,7 +147,7 @@ TrendCrafter 改变了素材管理与生产模式，首创基于 CTR 预测的 *
 | 层级 | 选型 |
 |------|------|
 | L5 反馈闭环 | `user_feedback.csv` + `FeedbackSystem`（Spearman / MAE 回归） + 报表导入预留接口 |
-| L4 执行生产 | **FISSION 参数化裂变 Agent** + 通义万相 Wanx v1（真实风格迁移）+ **多图 RAG 后处理** |
+| L4 执行生产 | **FISSION 定位与编辑 Agent**（OCR/Qwen-VL + Qwen-Image-Edit-Max）+ **多图 RAG 后处理** |
 | L3 供给决策 | 自研 `MaterialAgent` + 状态机 + 3R 决策矩阵（相关度 × 预测 CTR 阈值） |
 | L2 检索召回 | **Qdrant**（云服务 + 本地静态降级双模式）+ 关键词检索 + 语义推理检索融合排序 |
 | L1 感知认知 | **Qwen-VL-Plus** 多模态视觉理解 + DashScope Embedding v3 + **OCR.space**（中文高识别率）|
@@ -160,25 +162,28 @@ TrendCrafter 改变了素材管理与生产模式，首创基于 CTR 预测的 *
 
 ### 🟢 路径一：快速预览版（零配置，3 分钟跑通核心链路）
 
-无需任何 API Key，即可本地验证供给决策 + FISSION 智能微调核心能力：
+无需任何 API Key，即可本地验证供给决策、素材检索和 CTR 看板：
 
 ```bash
-pip install -r requirements.txt
-streamlit run src/portfolio_app.py
+./setup.sh portfolio
+./run.sh portfolio
 ```
 
 启动后按以下路径验证核心链路：
 1. 「智能检索与供给决策」输入「双11美妆红色促销」→ 查看三重召回结果 + Agent 供给决策建议（3R 矩阵分流）
-2. 「智能微调 FISSION」从行业样本库中选中一张素材 → 描述改动范围 → 批量变体生成
-3. 「CTR 决策看板」查看行业样本预测 CTR 与真实 CTR 的交互散点图与偏差分析
+2. 「CTR 决策看板」查看行业样本预测 CTR 与真实 CTR 的交互散点图与偏差分析
+
+真实智能微调依赖 DashScope，不以本地假图代替模型结果；请使用下方完整版本。
 
 ### 🟡 路径二：完整版本地部署（含登录权限 / 用户体系 / 商家配置）
 
 完整账号体系与白名单准入机制 / 三角色分级 / 数据隔离逻辑详见 `src/auth.py` 与 `PRODUCT_LOGIC.md`「账号与权限体系」章节。
 
 ```bash
-pip install -r requirements.txt
-streamlit run src/app.py
+cp .env.example .env
+# 在 .env 中配置 DASHSCOPE_API_KEY 等必要服务
+./setup.sh full
+./run.sh full
 ```
 
 首次启动需参考 `.env.example` 配置平台级管理员环境变量后登录（完整多租户隔离能力）。
@@ -202,7 +207,8 @@ TrendCrafter/
 │   ├── dictionaries.py / taobao_utils.py / design_utils.py  # 行业知识库与工具集
 │   └── AI素材案例/             # 行业样本图片集（零配置静态样本）
 ├── tests/
-│   └── test_catalog.py         # 单元测试：素材检索与样本数据集
+│   ├── test_catalog.py         # 单元测试：素材检索与样本数据集
+│   └── test_fission_localization.py # 回归测试：文字定位、预览区域与模型路由
 ├── .github/workflows/ci.yml    # CI 自动验证
 ├── Dockerfile / docker-compose.yml / deploy.sh   # 容器化部署脚本
 ├── PRODUCT_LOGIC.md            # 产品决策逻辑与工程实现细节文档
