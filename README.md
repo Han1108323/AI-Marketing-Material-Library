@@ -235,6 +235,9 @@ TrendCrafter/
 
 TrendCrafter AI • Empowering Creativity with Data.
 
+https://github.com/user-attachments/assets/1e0b5fa7-a55a-4926-80cb-dde81aee4ab3
 https://github.com/user-attachments/assets/f3d7fca4-a1d9-4137-bae4-d78373e900ff
+
+
 
 
