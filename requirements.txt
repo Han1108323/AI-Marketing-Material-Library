@@ -1,0 +1,5 @@
+# Lightweight standalone (lite) app: zero-config quick demo entry.
+streamlit>=1.48.0,<2
+Pillow>=10.0.0,<13
+pandas>=2.0.0,<3
+altair>=5.0.0,<7
